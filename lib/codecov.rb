@@ -211,6 +211,17 @@ class SimpleCov::Formatter::Codecov
       params[:build_url] = "https://console.aws.amazon.com/codebuild/home?region=#{ENV['AWS_DEFAULT_REGION']}#/builds/#{ENV['CODEBUILD_BUILD_ID']}/view/new"
       params[:commit] = ENV['CODEBUILD_RESOLVED_SOURCE_VERSION'] || ENV['CODEBUILD_SOURCE_VERSION']
       params[:slug] = ENV['CODEBUILD_BUILD_ARN'].split(':')[5]
+
+    # Bitbucket Pipelines
+    # ---------
+    elsif ENV['CI'] == 'true' and ENV['BITBUCKET_REPO_SLUG'] != nil
+      # https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
+      params[:service] = 'custom'
+      params[:branch] = ENV['BITBUCKET_BRANCH']
+      params[:commit] = ENV['BITBUCKET_COMMIT']
+      params[:slug] = ENV['BITBUCKET_REPO_SLUG']
+      params[:build] = ENV['BITBUCKET_BUILD_NUMBER']
+      params[:build_url] = "https://bitbucket.org/#{params[:slug]}/addon/pipelines/home#!/results/#{params[:build]}"
     end
 
     if params[:branch] == nil
