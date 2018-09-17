@@ -190,17 +190,6 @@ class SimpleCov::Formatter::Codecov
       params[:commit] = ENV['TEAMCITY_BUILD_COMMIT']
       params[:slug] = ENV['TEAMCITY_BUILD_REPOSITORY'].split('/', 4)[-1].sub('.git', '')
 
-    # AWS CodeBuild
-    # ---------
-    elsif ENV['CODEBUILD_BUILD_ID']
-      # https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
-      params[:service] = 'custom'
-      params[:branch] = ENV['GIT_BRANCH'] || ''
-      params[:build] = ENV['CODEBUILD_BUILD_ID']
-      params[:build_url] = "https://console.aws.amazon.com/codebuild/home?region=#{ENV['AWS_DEFAULT_REGION']}#/builds/#{ENV['CODEBUILD_BUILD_ID']}/view/new"
-      params[:commit] = ENV['CODEBUILD_RESOLVED_SOURCE_VERSION'] || ENV['CODEBUILD_SOURCE_VERSION']
-      params[:slug] = ENV['CODEBUILD_BUILD_ARN'].split(':')[5]
-
     # Bitbucket Pipelines
     # ---------
     elsif ENV['CI'] == 'true' and ENV['BITBUCKET_REPO_SLUG'] != nil
@@ -208,7 +197,7 @@ class SimpleCov::Formatter::Codecov
       params[:service] = 'custom'
       params[:branch] = ENV['BITBUCKET_BRANCH']
       params[:commit] = ENV['BITBUCKET_COMMIT']
-      params[:slug] = ENV['BITBUCKET_REPO_SLUG']
+      params[:slug] = "#{ENV['BITBUCKET_REPO_OWNER']}/#{ENV['BITBUCKET_REPO_SLUG']}"
       params[:build] = ENV['BITBUCKET_BUILD_NUMBER']
       params[:build_url] = "https://bitbucket.org/#{params[:slug]}/addon/pipelines/home#!/results/#{params[:build]}"
     end

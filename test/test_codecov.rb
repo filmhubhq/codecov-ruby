@@ -66,6 +66,7 @@ class TestCodecov < Minitest::Test
     ENV['BITBUCKET_COMMIT'] = nil
     ENV['BITBUCKET_BRANCH'] = nil
     ENV['BITBUCKET_REPO_SLUG'] = nil
+    ENV['BITBUCKET_REPO_OWNER'] = nil
     ENV['BITBUCKET_BUILD_NUMBER'] = nil
     ENV['BRANCH'] = nil
     ENV['BRANCH_NAME'] = nil
@@ -376,45 +377,12 @@ class TestCodecov < Minitest::Test
     assert_equal("owner/repo", result['params'][:slug])
     assert_equal('f881216b-b5c0-4eb1-8f21-b51887d1d506', result['params']['token'])
   end
-  def test_codebuild
-    ENV['AWS_REGION'] = 'us-east-1'
-    ENV['CODEBUILD_BUILD_ARN'] = "arn:aws:codebuild:region-ID:account-ID:build/codebuild-demo-project:b1e6661e-e4f2-4156-9ab9-82a19EXAMPLE"
-    ENV['CODEBUILD_BUILD_ID'] = "codebuild-demo-project:b1e6661e-e4f2-4156-9ab9-82a19EXAMPLE"
-    ENV['CODEBUILD_INITIATOR'] = "MyUserName"
-    ENV['CODEBUILD_LOG_PATH'] = "efa7a6c2-6551-45e5-8f06-8e2e2e37ba9d"
-    ENV['CODEBUILD_RESOLVED_SOURCE_VERSION'] = nil
-    ENV['CODEBUILD_SOURCE_VERSION'] = "c739768fcac68144a3a6d82305b9c4106934d31a"
-    ENV['CODEBUILD_SOURCE_REPO_URL'] = "s3://bucket/key"
-    ENV['CODECOV_TOKEN'] = "f881216b-b5c0-4eb1-8f21-b51887d1d506"
-    result = upload
-    assert_equal("custom", result['params'][:service])
-    assert_equal("c739768fcac68144a3a6d82305b9c4106934d31a", result['params'][:commit])
-    assert_equal("codebuild-demo-project:b1e6661e-e4f2-4156-9ab9-82a19EXAMPLE", result['params'][:build])
-    assert_equal("https://console.aws.amazon.com/codebuild/home?region=#/builds/codebuild-demo-project:b1e6661e-e4f2-4156-9ab9-82a19EXAMPLE/view/new", result['params'][:build_url])
-    assert_equal('f881216b-b5c0-4eb1-8f21-b51887d1d506', result['params']['token'])
-  end
-  def test_codebuild_codepipeline
-    ENV['AWS_REGION'] = "us-east-1"
-    ENV['CODEBUILD_BUILD_ARN'] = "arn:aws:codebuild:region-ID:account-ID:build/codebuild-demo-project:b1e6661e-e4f2-4156-9ab9-82a19EXAMPLE"
-    ENV['CODEBUILD_BUILD_ID'] = "codebuild-demo-project:b1e6661e-e4f2-4156-9ab9-82a19EXAMPLE"
-    ENV['CODEBUILD_INITIATOR'] = "codepipeline/basics-development-WebPipeline-159BMH0SGZMFE"
-    ENV['CODEBUILD_LOG_PATH'] = "efa7a6c2-6551-45e5-8f06-8e2e2e37ba9d"
-    ENV['CODEBUILD_RESOLVED_SOURCE_VERSION'] = "c739768fcac68144a3a6d82305b9c4106934d31a"
-    ENV['CODEBUILD_SOURCE_VERSION'] = "arn:aws:s3:::bucket/prefix/source/Q8KSWlD.zip"
-    ENV['CODECOV_TOKEN'] = "f881216b-b5c0-4eb1-8f21-b51887d1d506"
-    result = upload
-    assert_equal("custom", result['params'][:service])
-    assert_equal("c739768fcac68144a3a6d82305b9c4106934d31a", result['params'][:commit])
-    assert_equal("codebuild-demo-project:b1e6661e-e4f2-4156-9ab9-82a19EXAMPLE", result['params'][:build])
-    assert_equal("https://example.com/logstream", result['params'][:build_url])
-    # assert_equal("https://console.aws.amazon.com/codebuild/home?region=us-east-1#/builds/codebuild-demo-project:b1e6661e-e4f2-4156-9ab9-82a19EXAMPLE/view/new", result['params'][:build_url])
-    assert_equal('f881216b-b5c0-4eb1-8f21-b51887d1d506', result['params']['token'])
-  end
   def test_bitbucket_pipelines
     ENV['CI'] = 'true'
     ENV['BITBUCKET_COMMIT'] = "c739768fcac68144a3a6d82305b9c4106934d31a"
     ENV['BITBUCKET_BRANCH'] = "master"
-    ENV['BITBUCKET_REPO_SLUG'] = "codecov/ci-repo"
+    ENV['BITBUCKET_REPO_SLUG'] = "ci-repo"
+    ENV['BITBUCKET_REPO_OWNER'] = "codecov"
     ENV['BITBUCKET_BUILD_NUMBER'] = "7"
     ENV['CODECOV_TOKEN'] = 'f881216b-b5c0-4eb1-8f21-b51887d1d506'
     result = upload
