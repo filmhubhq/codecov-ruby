@@ -208,7 +208,7 @@ class SimpleCov::Formatter::Codecov
       params[:service] = 'custom'
       params[:branch] = ENV['BITBUCKET_BRANCH']
       params[:commit] = ENV['BITBUCKET_COMMIT']
-      params[:slug] = ENV['BITBUCKET_REPO_SLUG']
+      params[:slug] = "#{ENV['BITBUCKET_REPO_OWNER']}/#{ENV['BITBUCKET_REPO_SLUG']}"
       params[:build] = ENV['BITBUCKET_BUILD_NUMBER']
       params[:build_url] = "https://bitbucket.org/#{params[:slug]}/addon/pipelines/home#!/results/#{params[:build]}"
     end
